@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs wc *)",
+      "Bash(xargs cat *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python run.py)",
+      "Bash(curl -s http://localhost:5000/api/health)",
+      "Bash(curl -s -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d '{\"username\":\"admin\",\"password\":\"admin123\"}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('TOKEN:', d.get\\('token','ERROR'\\)[:40]\\)\")",
+      "Bash(curl -s -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@agropipes.com\",\"password\":\"admin123\"}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); t=d.get\\('token',''\\); print\\('TOKEN:', t[:50] if t else 'NO TOKEN'\\); print\\('KEYS:', list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(curl -s -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"laura@agropipes.com\",\"password\":\"admin123\"}')",
+      "Bash(python3 -c ' *)",
+      "Bash(npm --version)",
+      "Bash(npx eas *)",
+      "Bash(npx expo *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Name:', d.get\\('name'\\)\\); print\\('EAS:', d.get\\('dependencies',{}\\).get\\('@expo/eas-cli','no'\\)\\); print\\('Expo:', d.get\\('dependencies',{}\\).get\\('expo','no'\\)\\)\")",
+      "Bash(npm list *)",
+      "Bash(eas --version)",
+      "Bash(eas whoami *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('expo',{}\\).get\\('owner','NO OWNER'\\)\\)\\); print\\('slug:', d.get\\('expo',{}\\).get\\('slug','no slug'\\)\\); print\\('projectId:', d.get\\('expo',{}\\).get\\('extra',{}\\).get\\('eas',{}\\).get\\('projectId','NO PROJECT ID'\\)\\)\")",
+      "Read(//c/Users/deiby/AppData/Local/**)",
+      "Read(//c/Users/deiby/AppData/Local/Android/Sdk/**)",
+      "PowerShell(cmd /c \"dir C:\\\\Users\\\\deiby\\\\Android\\\\Sdk\")",
+      "Bash(git --version)",
+      "Bash(git config *)",
+      "Bash(export ANDROID_HOME=\"C:/Users/deiby/Android/Sdk\")",
+      "Bash(export JAVA_HOME=\"C:/Users/deiby/jdk-17\")",
+      "Bash(export PATH=\"$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH\")",
+      "Bash(export PATH=\"$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH\")",
+      "Bash(chmod +x gradlew)",
+      "Bash(./gradlew assembleDebug)",
+      "Bash(ipconfig)"
+    ]
+  }
+}

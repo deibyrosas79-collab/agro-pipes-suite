@@ -1,0 +1,38 @@
+# Python / Backend
+backend/.venv/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/**/__pycache__/
+backend/instance/*.db
+backend/instance/*.pid
+backend/instance/*.log
+*.pyc
+*.pyo
+
+# Node / Web & Mobile
+web/node_modules/
+web/dist/
+mobile/node_modules/
+mobile/.expo/
+.expo/
+expo-env.d.ts
+
+# Env files (keep .env.example committed)
+.env
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# EAS / Expo build artifacts
+mobile/android/
+mobile/ios/
