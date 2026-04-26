@@ -36,3 +36,6 @@ Thumbs.db
 # EAS / Expo build artifacts
 mobile/android/
 mobile/ios/
+
+# Claude Code settings
+.claude/settings.local.json
