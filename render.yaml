@@ -15,13 +15,12 @@ services:
           name: agro-pipes-db
           property: connectionString
       - key: CORS_ORIGINS
-        value: https://agro-pipes-web.onrender.com,http://localhost:5173
+        value: https://agro-pipes-web.onrender.com,http://localhost:5173,http://localhost:4173,*
       - key: TOKEN_MAX_AGE
         value: "43200"
 
-  - type: web
+  - type: static
     name: agro-pipes-web
-    runtime: node
     rootDir: web
     buildCommand: npm install && npm run build
     staticPublishPath: dist
