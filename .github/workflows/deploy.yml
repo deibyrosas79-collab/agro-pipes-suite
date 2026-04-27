@@ -43,8 +43,64 @@ jobs:
             echo "RENDER_API_KEY not set - skipping"
             exit 0
           fi
-          echo "Triggering Render deploy..."
-          curl -sf -H "Authorization: Bearer $RENDER_KEY" \
-            "https://api.render.com/v1/services?limit=20" \
-            -o /tmp/services.json
-          cat /tmp/services.json | grep -o '"id":"[^"]*"' | head -10
+          python <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.request
+
+          key = os.environ["RENDER_KEY"]
+          targets = {"agro-pipes-api", "agro-pipes-web"}
+
+          def request_json(url, method="GET", payload=None):
+              data = None
+              headers = {"Authorization": f"Bearer {key}"}
+              if payload is not None:
+                  data = json.dumps(payload).encode("utf-8")
+                  headers["Content-Type"] = "application/json"
+              request = urllib.request.Request(url, data=data, headers=headers, method=method)
+              with urllib.request.urlopen(request) as response:
+                  return json.loads(response.read().decode("utf-8"))
+
+          def iter_services(payload):
+              if isinstance(payload, list):
+                  return payload
+              for key in ("items", "services"):
+                  if isinstance(payload.get(key), list):
+                      return payload[key]
+              return []
+
+          def candidate_names(service):
+              names = set()
+              for key in ("name", "slug", "serviceName"):
+                  value = service.get(key)
+                  if isinstance(value, str):
+                      names.add(value)
+              for container in ("serviceDetails", "service", "details"):
+                  nested = service.get(container)
+                  if isinstance(nested, dict):
+                      for key in ("name", "slug", "serviceName"):
+                          value = nested.get(key)
+                          if isinstance(value, str):
+                              names.add(value)
+              return names
+
+          services_payload = request_json("https://api.render.com/v1/services?limit=100")
+          services = iter_services(services_payload)
+          matches = [service for service in services if candidate_names(service) & targets]
+
+          if not matches:
+              print("No Render services found for AGRO PIPES. Create them first with render.yaml / Blueprint.")
+              sys.exit(0)
+
+          for service in matches:
+              service_id = service["id"]
+              service_names = ", ".join(sorted(candidate_names(service)))
+              deploy = request_json(
+                  f"https://api.render.com/v1/services/{service_id}/deploys",
+                  method="POST",
+                  payload={"clearCache": "do_not_clear"},
+              )
+              deploy_id = deploy.get("id", "unknown")
+              print(f"Triggered deploy for {service_names} -> {deploy_id}")
+          PY
