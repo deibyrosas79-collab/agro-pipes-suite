@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   deploy-web:
-    name: Web → GitHub Pages
+    name: Web to GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,16 +19,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install and build
         working-directory: web
-        run: npm install
-
-      - name: Build web app
-        working-directory: web
-        env:
-          VITE_API_URL: https://agro-pipes-api.onrender.com/api
-          VITE_BASE_URL: /agro-pipes-suite/
-        run: npm run build
+        run: npm install && VITE_API_URL=https://agro-pipes-api.onrender.com/api VITE_BASE_URL=/agro-pipes-suite/ npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -38,40 +31,20 @@ jobs:
           force_orphan: true
 
   deploy-render:
-    name: API → Render
+    name: API to Render
     runs-on: ubuntu-latest
     needs: deploy-web
-    env:
-      RENDER_KEY: ${{ secrets.RENDER_API_KEY }}
     steps:
-      - name: Skip if no Render key
-        if: ${{ env.RENDER_KEY == '' }}
-        run: echo "RENDER_API_KEY secret not configured — skipping Render deploy"
-
       - name: Trigger Render deploy
-        if: ${{ env.RENDER_KEY != '' }}
+        env:
+          RENDER_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          echo "Fetching Render services..."
-          RESP=$(curl -sf \
-            -H "Authorization: Bearer $RENDER_KEY" \
-            "https://api.render.com/v1/services?limit=20")
-          echo "$RESP" | python3 -c "
-import json, sys, subprocess, os
-key = os.environ['RENDER_KEY']
-items = json.load(sys.stdin)
-deployed = 0
-for item in items:
-    srv = item.get('service', item)
-    sid = srv.get('id','')
-    name = srv.get('name','')
-    if sid and 'agro-pipes' in name:
-        print(f'Deploying {name} ({sid})...')
-        r = subprocess.run(['curl','-sf','-X','POST',
-            '-H', f'Authorization: Bearer {key}',
-            f'https://api.render.com/v1/services/{sid}/deploys'],
-            capture_output=True, text=True)
-        print(r.stdout[:200] or r.stderr[:200])
-        deployed += 1
-if deployed == 0:
-    print('No agro-pipes services found in Render account')
-"
+          if [ -z "$RENDER_KEY" ]; then
+            echo "RENDER_API_KEY not set - skipping"
+            exit 0
+          fi
+          echo "Triggering Render deploy..."
+          curl -sf -H "Authorization: Bearer $RENDER_KEY" \
+            "https://api.render.com/v1/services?limit=20" \
+            -o /tmp/services.json
+          cat /tmp/services.json | grep -o '"id":"[^"]*"' | head -10
