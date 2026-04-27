@@ -159,6 +159,7 @@ function Sidebar({ page, setPage }) {
 function Dashboard({ data, loading, onRefresh }) {
   const m = data?.metrics || {};
   const period = data?.period;
+  const productivity = m.hoursThisFortnight ? (Number(m.hoppersThisFortnight || 0) / Number(m.hoursThisFortnight || 1)).toFixed(2) : "0.00";
   const periodLabel = period ? `${period.start} → ${period.end}` : "Cargando…";
 
   return (
@@ -171,6 +172,31 @@ function Dashboard({ data, loading, onRefresh }) {
         <button className="btn-ghost" onClick={onRefresh} disabled={loading}>
           {loading ? <span className="spinner" /> : "↻"} Actualizar
         </button>
+      </div>
+
+      <div className="executive-strip">
+        <div className="executive-hero">
+          <span className="executive-eyebrow">Centro operativo</span>
+          <h3>Operacion agricola con trazabilidad diaria y control quincenal.</h3>
+          <p>Supervisa personal, lotes, maquinaria y cosecha desde una vista mas ejecutiva del negocio.</p>
+          <div className="executive-tags">
+            <span className="executive-tag">Periodo: {periodLabel}</span>
+            <span className="executive-tag">Equipo activo: {m.activeEmployees ?? 0}</span>
+            <span className="executive-tag">Maquinaria activa: {m.activeMachinery ?? 0}</span>
+          </div>
+        </div>
+        <div className="executive-side">
+          <div className="ops-card">
+            <span className="ops-label">Productividad de cosecha</span>
+            <strong>{productivity} tolvas/hora</strong>
+            <small>Relacion entre tolvas registradas y horas reportadas.</small>
+          </div>
+          <div className="ops-card">
+            <span className="ops-label">Cobertura de gestion</span>
+            <strong>{m.activeLots ?? 0} lotes en control</strong>
+            <small>Seguimiento sincronizado de labores, recursos y rendimiento.</small>
+          </div>
+        </div>
       </div>
 
       <div className="kpi-grid">

@@ -2,23 +2,23 @@
   "expo": {
     "name": "AGRO PIPES",
     "slug": "agro-pipes-mobile",
-    "version": "2.0.0",
+    "version": "2.1.1",
     "orientation": "portrait",
-    "icon": "./assets/agro-pipes-logo.jpeg",
+    "icon": "./assets/agro-pipes-logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/agro-pipes-logo.jpeg",
+      "image": "./assets/agro-pipes-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#0f3020"
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/agro-pipes-logo.jpeg",
+        "foregroundImage": "./assets/agro-pipes-logo.png",
         "backgroundColor": "#1a5c35"
       },
       "package": "com.agropipes.mobile",
-      "versionCode": 2,
+      "versionCode": 5,
       "permissions": [
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
